@@ -13,6 +13,7 @@ import TimingView from './timing.jsx';
 import JSONView from './json-view.jsx';
 import samples from '../src/data/samples.json';
 import cachedModels from '../src/data/models.json';
+//import { Container, Row, Col } from 'reactstrap';
 
 const ERR_MIC_NARROWBAND = 'Microphone transcription cannot accommodate narrowband voice models, please select a broadband one.';
 
@@ -380,8 +381,8 @@ export default React.createClass({
 
     const messages = this.getFinalAndLatestInterimResult();
     const micBullet = (typeof window !== 'undefined' && recognizeMicrophone.isSupported) ?
-      <li className="base--li">Use your microphone to record audio.</li> :
-      <li className="base--li base--p_light">Use your microphone to record audio. (Not supported in current browser)</li>;// eslint-disable-line
+      <li className="base--li"></li> :
+      <li className="base--li base--p_light"></li>;// eslint-disable-line
 
     return (
 
@@ -398,7 +399,19 @@ export default React.createClass({
           this.dropzone = node;
         }}
       >
+      
+      <div>        
+          <div style={{"width":"50%","float":"left","background-color":"white","margin-top":"139px","font-size":"x-large"}}>
+          Hello Msys!!! Try out Watson by clicking on transcibe
+          <div >
 
+          <button className={micButtonClass} onClick={this.handleMicClick}>
+            <Icon type={this.state.audioSource === 'mic' ? 'stop' : 'microphone'} fill={micIconFill} /> Transcibe
+          </button>
+
+        </div>
+        </div>
+          <div style={{"width":"53%","float":"right","background-color":"aqua", "margin-right":"-118px"}}>
         <div className="drop-info-container">
           <div className="drop-info">
             <h1>Drop an audio file here.</h1>
@@ -406,40 +419,7 @@ export default React.createClass({
           </div>
         </div>
 
-        <h2 className="base--h2">Transcribe Audio</h2>
-
-        <ul className="base--ul">
-          {micBullet}
-          <li className="base--li">{'Upload pre-recorded audio (.mp3, .mpeg, .wav, .flac, or .opus only).'}</li>
-          <li className="base--li">Play one of the sample audio files.*</li>
-        </ul>
-
-        <div className="smalltext">
-          {'*Both US English broadband sample audio files are covered under the Creative Commons license.'}
-        </div>
-
-        <div style={{
-          paddingRight: '3em',
-          paddingBottom: '2em',
-        }}
-        >
-          The returned result includes the recognized text, {' '}
-          <a className="base--a" href="https://console.bluemix.net/docs/services/speech-to-text/output.html#output">word alternatives</a>, {' '}
-          and <a className="base--a" href="https://console.bluemix.net/docs/services/speech-to-text/output.html#output">spotted keywords</a>. {' '}
-          Some models can <a className="base--a" href="https://console.bluemix.net/docs/services/speech-to-text/output.html#output">detect multiple speakers</a>; this may slow down performance.
-        </div>
-
-
-        <div className="flex setup">
-          <div className="column">
-
-            <p>Voice Model:
-              <ModelDropdown
-                model={this.state.model}
-                token={this.state.token}
-                onChange={this.handleModelChange}
-              />
-            </p>
+        <h2 className="base--h2">Transcribe Audio</h2>            
 
             <p className={this.supportsSpeakerLabels() ? 'base--p' : 'base--p_light'}>
               <input
@@ -455,52 +435,25 @@ export default React.createClass({
               </label>
             </p>
 
-          </div>
-          <div className="column">
-
-            <p>Keywords to spot: <input
+            <p>Keywords to spot: <textarea
               value={this.state.keywords}
               onChange={this.handleKeywordsChange}
-              type="text"
+              rows="5"
               id="keywords"
               placeholder="Type comma separated keywords here (optional)"
               className="base--input"
             /></p>
 
-          </div>
-        </div>
-
-
-        <div className="flex buttons">
-
-          <button className={micButtonClass} onClick={this.handleMicClick}>
-            <Icon type={this.state.audioSource === 'mic' ? 'stop' : 'microphone'} fill={micIconFill} /> Record Audio
-          </button>
-
-          <button className={buttonClass} onClick={this.handleUploadClick}>
-            <Icon type={this.state.audioSource === 'upload' ? 'stop' : 'upload'} /> Upload Audio File
-          </button>
-
-          <button className={buttonClass} onClick={this.handleSample1Click}>
-            <Icon type={this.state.audioSource === 'sample-1' ? 'stop' : 'play'} /> Play Sample 1
-          </button>
-
-          <button className={buttonClass} onClick={this.handleSample2Click}>
-            <Icon type={this.state.audioSource === 'sample-2' ? 'stop' : 'play'} /> Play Sample 2
-          </button>
-
-        </div>
+        
 
         {err}
+  
 
         <Tabs selected={0}>
           <Pane label="Text">
             {this.state.settingsAtStreamStart.speakerLabels
               ? <SpeakersView messages={messages} />
               : <Transcript messages={messages} />}
-          </Pane>
-          <Pane label="Word Timings and Alternatives">
-            <TimingView messages={messages} />
           </Pane>
           <Pane label={`Keywords ${getKeywordsSummary(this.state.settingsAtStreamStart.keywords, messages)}`}>
             <Keywords
@@ -509,11 +462,10 @@ export default React.createClass({
               isInProgress={!!this.state.audioSource}
             />
           </Pane>
-          <Pane label="JSON">
-            <JSONView raw={this.state.rawMessages} formatted={this.state.formattedMessages} />
-          </Pane>
         </Tabs>
 
+        </div>
+  </div>
       </Dropzone>
     );
   },
